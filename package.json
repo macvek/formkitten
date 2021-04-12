@@ -1,14 +1,23 @@
 {
-  "name": "forkkit",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "formkitten",
+  "version": "0.0.1",
+  "description": "Small toolkit to quickly create a form bound with model. Main purpose is prototyping, but should also look good.",
+  "main": "formkitten.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "serve"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "bootstrap": "5.0.0-beta3",
+    "includeplainjs": "^1.0.1",
+    "jquery": "^3.6.0",
     "serve": "^11.3.2"
-  }
+  },
+  "devDependencies": {
+    "jsdom": "^16.5.3"
+  },
+  "homepage": "https://github.com/macvek/includeplainjs",
+  "repository": "https://github.com/macvek/includeplainjs",
+  "author": "Maciej Aleksandrowicz <macvek@gmail.com>",
+  "license": "ISC"
 }

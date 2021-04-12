@@ -1,33 +1,11 @@
 <html>
     <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>    
 
     <body>
         
         <div class="custombox" id="root"></div>
-
-
-        <div class="custombox" id="sample">
-            <form>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-
-        </div>
-    
 
         <style>
             .custombox {
@@ -36,110 +14,93 @@
             }
         </style>
 
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>        
+        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script src="formkitten.class.js"></script>
         <script>
-            
-            function start() {
-                let f = new FormKit();
-                f.inputEmail('emailField', "Email address", `We'll never share your email with anyone else.`);
-                f.inputPassword('passwordField', "Password");
-                f.checkbox('checkboxField', 'Check me out', "Hint for checkbox");
-                f.submit('Submit');
-                document.querySelector('#root').appendChild(f.build());
-            }
-
-        </script>
-
-        <script>
-            class FormKit {
-                content = [];
                 
-                submit(caption) {
-                    let template = `<button type="submit" class="btn btn-primary">${caption}</button>`;
-                    this.pushAsHTML(template);
+            function start() {
+                let version = 3;
+                let all = true;
+                let f = new FormKitten();
+                if (version == 1 || all) {
+                    f.inputEmail('emailField', "Email address", `We'll never share your email with anyone else.`);
+                    f.inputPassword('embedded.passwordField', "Password");
+                    f.checkbox('checkboxField', 'Check me out', "Hint for checkbox");
+                    f.submit('Submit');
+                }
+                if (version == 2 || all) {
+                    f.textarea("textareaField", "Example textarea", "extra hint");
+                }
+                if (version == 3 || all) {
+                    let possibleValues = [
+                        f.option("Open this select menu",{selected:true}),
+                        f.option("One", {value:1}),
+                        f.option("Two", {value:2}),
+                        f.option("Three", {value:3})
+                    ]
+                    f.select("selectedField", "Picker", possibleValues, "extra hint");
+
+                    possibleValues = [
+                        f.option("Open this select menu",{selected:true}),
+                        f.option("One", {value:'a',selected:true}),
+                        f.option("Two", {value:'b',selected:true}),
+                        f.option("Three", {value:'c'})
+                    ]
+                    f.multiSelect("multiPicker", "Multi Picker", possibleValues, "extra hint");
                 }
 
-                build() {
-                    let div = document.createElement('div');
-                    for (let each of this.content) {
-                        div.appendChild(each);
-                    }
+                let horizontalLine = document.createElement('hr');
 
-                    return div;
-                }
+                f.element(horizontalLine);
 
-                checkbox(modelName, caption, hint) {
-                    let inputId = this.idFor(modelName);
-                    let [hintTemplate, hintPointer] = this.hintLabelTemplate(hint, modelName);
-
-                    let template = `
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="${inputId}" ${hintPointer}>
-                        <label for="${inputId}" class="form-check-label">${caption}</label>
-                        ${hintTemplate}
-                    </div>
+                f.custom("customField", id => {
+                    let pre = `
+                        <pre>Just a placeholder, would have id of :${id}</pre>
+                        <input id="${id}" type="hidden" />
                     `;
+                    let it = document.createElement('div');
+                    it.innerHTML = pre;
 
-                    this.pushAsHTML(template);
-                }
+                    return it;
+                });
 
-                inputEmail(modelName, caption, hint) {
-                    return this.input(modelName, 'email', caption, hint);
-                }
 
-                inputPassword(modelName, caption, hint) {
-                    return this.input(modelName, 'password', caption, hint);
-                }
+                let formDOM = f.build(true);
+                document.querySelector('#root').appendChild(formDOM);
+                f.loadFrom({
+                    emailField:'Hello@world',
+                    embedded: {passwordField:'pass'},
+                    textareaField: 'in text area',
+                    selectedField:2,
+                    multiPicker:['a','c'],
+                    customField:1234
+                });
 
-                inputText(modelName, caption, hint) {
-                    return this.input(modelName, 'text', caption, hint);
-                }
+                f.applyValidation({
+                    emailField:{required:'',withInvalidFeedback:'Please add email', withCallback: (value, modelName) => {
+                        console.log(`triggered custom from ${modelName} ${value}`);
+                        if (value !== "Hello@World" && value !== '') {
+                            return "Only Hello@World is accepted here";
+                        }
+                    }},
+                    checkboxField: {required:'', withInvalidFeedback:'You must accept the terms'},
+                    textareaField: {minlength:10}
 
-                input(modelName, type, caption, hint) {
-                    let inputId = this.idFor(modelName);
-                    let [hintTemplate, hintPointer] = this.hintLabelTemplate(hint, modelName);
+                })
 
-                    let template = `
-                    <div class="mb-3">
-                        <label for="${inputId}" class="form-label">${caption}</label>
-                        <input type="${type}" class="form-control" id="${inputId}" ${hintPointer}>
-                        ${hintTemplate}
-                    </div>
-                    `;
 
-                    this.pushAsHTML(template);
-                }
+                formDOM.addEventListener('submit', event => {
+                    let newModel = {};
+                    f.storeTo(newModel);
+                    console.log(event, newModel);
+                    event.preventDefault();
+                });
 
-                hintLabelTemplate(hint, modelName) {
-                    let hintTemplate = '';
-                    let hintPointer = '';
-                    if (hint) {
-                        let hintId = this.idFor(`${modelName}-hint`);
-                        hintTemplate =`<div id="${hintId}" class="form-text">${hint}</div>`;
-                        hintPointer = `aria-describedby="${hintId}"`;
-                    }
-                    return [hintTemplate, hintPointer];
-                }
-
-                pushAsHTML(template) {
-                    let pack = document.createElement('div');
-                    pack.innerHTML = template;
-                    this.content.push(pack);
-                }
-
-                idFor(name) {
-                    return `formkit-${name}`;
-                }
             }
 
-        </script>
-
-        <script>
-                start();
+            start();
         </script>
     </body>
 </html>
