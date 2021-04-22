@@ -1,10 +1,11 @@
 {
   "name": "formkitten",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Small toolkit to quickly create a form bound with model. Main purpose is prototyping, but should also look good.",
   "main": "formkitten.js",
   "scripts": {
-    "start": "serve"
+    "start": "serve",
+    "test": "node alltests.spec.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",

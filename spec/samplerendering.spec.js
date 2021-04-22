@@ -12,7 +12,7 @@ module.exports = specs;
 
 let {FormKitten, dom} = require('../formkitten');
 
-if (require.module === module.main) {
+if (require.main === module) {
     require('testkitten')(specs);
 }
 

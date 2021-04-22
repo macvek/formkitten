@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/spec/samplerendering.spec.js"
+            "program": "${workspaceFolder}/tests.spec.js"
         }
     ]
 }
