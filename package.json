@@ -1,6 +1,6 @@
 {
   "name": "formkitten",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Small toolkit to quickly create a form bound with model. Main purpose is prototyping, but should also look good.",
   "main": "formkitten.js",
   "scripts": {
@@ -16,8 +16,8 @@
   "devDependencies": {
     "jsdom": "^16.5.3"
   },
-  "homepage": "https://github.com/macvek/includeplainjs",
-  "repository": "https://github.com/macvek/includeplainjs",
+  "homepage": "https://github.com/macvek/formkitten",
+  "repository": "https://github.com/macvek/formkitten",
   "author": "Maciej Aleksandrowicz <macvek@gmail.com>",
   "license": "ISC"
 }
