@@ -188,15 +188,15 @@ class FormKitten {
      */
 
     applyValidation(model) {
-        for (let each of this.knownIds) {
-            let fromModel = this._loadValue(model, each);
+        for (let modelName of this.knownIds) {
+            let fromModel = this._loadValue(model, modelName);
             if (fromModel !== undefined) {
-                let domInput = document.getElementById(this._idFor(each));
+                let domInput = document.getElementById(this._idFor(modelName));
                 for (let attrName in fromModel) {
                     let attrValue = fromModel[attrName];
                     switch(attrName) {
                     case 'withCallback':
-                        this._addValidationCallback(domInput, attrName, attrValue);
+                        this._addValidationCallback(domInput, modelName, attrValue);
                         break;
                     case 'withInvalidFeedback':
                         this._addInvalidFeedbackText(domInput, attrValue);
@@ -287,7 +287,7 @@ class FormKitten {
         let template = `<div class='invalid-feedback'>${text}</div>`;
         let node = this._pickFromHTML(template);
         let parent = domInput.parentNode;
-        let after = domInput.nextSibling;
+        let after = domInput.nextElementSibling;
         if (!after) {
             parent.appendChild(node);
         }
@@ -374,7 +374,7 @@ class FormKitten {
     }
 
     _restoreInvalidFeedbackText(domInput) {
-        let feedbackNode = domInput.nextSibling;
+        let feedbackNode = domInput.nextElementSibling;
         if (feedbackNode && feedbackNode.classList.contains('invalid-feedback')) {
             let tempNode = feedbackNode.querySelector('.temporary');
             if (tempNode) {
@@ -385,7 +385,7 @@ class FormKitten {
     }
 
     _replaceInvalidFeedbackText(domInput, text) {
-        let feedbackNode = domInput.nextSibling;
+        let feedbackNode = domInput.nextElementSibling;
         if (feedbackNode && feedbackNode.classList.contains('invalid-feedback')) {
             let replacement = `<div class="temporary" style="display:none">${feedbackNode.innerHTML}</div>${text}</div>`;
             feedbackNode.innerHTML = replacement;

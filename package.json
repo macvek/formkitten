@@ -11,7 +11,8 @@
     "bootstrap": "5.0.0-beta3",
     "includeplainjs": "^1.0.1",
     "jquery": "^3.6.0",
-    "serve": "^11.3.2"
+    "serve": "^11.3.2",
+    "testkitten": "^0.0.2"
   },
   "devDependencies": {
     "jsdom": "^16.5.3"
